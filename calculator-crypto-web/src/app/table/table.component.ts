@@ -71,4 +71,5 @@ export class TableComponent implements DoCheck{
       this.items[index].totalUSD = quantity * price;
       this.items[index].totalCOL = quantity * price * 3700;
   }
+
 }

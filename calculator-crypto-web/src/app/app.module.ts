@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { NavigatorComponent } from './navigator/navigator.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { TableComponent } from './table/table.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { TableComponent } from './table/table.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
