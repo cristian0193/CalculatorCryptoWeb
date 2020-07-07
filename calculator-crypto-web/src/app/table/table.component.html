@@ -13,26 +13,24 @@
         </thead>
         <tbody>
             <tr *ngFor="let item of items; let i = index">
-                <th scope="row">Bitcoin</th>
-                <td id="priceDolar" class="text-center">{{item.nombre}}</td>
-                <td class="text-center">{{item.precio}}</td>
+                <th scope="row">{{ item.coin }}</th>
+                <td class="text-center">{{ item.price }}</td>
+                <td class="text-center">{{ item.priceCol }}</td>
                 <td class="text-center">
-                    <input id="quantity" [(ngModel)]="item.cantidad" type="number" style="width: 100px;">
+                    <input id="quantity" [(ngModel)]="item.quantity" type="number" class="text-center" style="width: 100px; border: none;">
                 </td>
-                <td class="text-center">{{ item.resultadoTotal}}</td>
-                <td class="text-center">{{ item.precio * item.cantidad * 3700}}</td>
+                <td class="text-center">{{ item.totalUSD }}</td>
+                <td class="text-center">{{ item.totalCOL }}</td>
                 <td class="text-center">
-                    <button id="calcular" class="btn btn-primary" (click)="getCalculation(item.cantidad, item.precio, i)">Calcular</button>
+                    <button id="calcular" class="btn btn-primary" (click)="getCalculation(item.quantity, item.price, i)">Calcular</button>
                 </td>
             </tr>
 
-
-
             <tr class="table-primary">
                 <th colspan="3" scope="row">Grand Total</th>
-                <td class="text-center" style="font-weight: bold;">0</td>
-                <td class="text-center" style="font-weight: bold;">{{totalCalculo}}</td>
-                <td class="text-center" style="font-weight: bold;">$ 0.0</td>
+                <td class="text-center" style="font-weight: bold;">{{ grandTotalQuantity }}</td>
+                <td class="text-center" style="font-weight: bold;">{{ grandTotalPriceUSD }}</td>
+                <td class="text-center" style="font-weight: bold;">$ {{ grandTotalPriceCOL }}</td>
                 <td class="text-center" style="font-weight: bold;"></td>
             </tr>
         </tbody>

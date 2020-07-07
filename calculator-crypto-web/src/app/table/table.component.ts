@@ -1,5 +1,4 @@
 import { Component,DoCheck } from '@angular/core';
-import * as $ from 'jquery';
 
 @Component({
   selector: 'app-table',
@@ -11,43 +10,65 @@ export class TableComponent implements DoCheck{
   public precioDolar: number;
   public cantidad: number;
   public resultado: number;
-  public totalCalculo:number;
+  public grandTotalQuantity:number;
+  public grandTotalPriceUSD:number;
+  public grandTotalPriceCOL:number;
 
   constructor(){
-    this.precioDolar = 4000;
+    this.precioDolar = 0;
     this.cantidad= 0;
   }
 
   public items: Array<any> = [
     {
-       nombre: 'BItcoin',
-       precio: 9000,
-       precioCol: 36000000,
-       cantidad: 0,
+       coin: 'Bitcoin',
+       price: 9000,
+       priceCol: 36000000,
+       quantity: 0,
        totalUSD: 0,
-       totalCOL: 0,
-       resultadoTotal:0
+       totalCOL: 0
     },
     {
-      nombre: 'Ether',
-      precio: 250,
-      precioCol: 850000,
-      cantidad: 0,
+      coin: 'Ether',
+      price: 250,
+      priceCol: 850000,
+      quantity: 0,
       totalUSD: 0,
-      totalCOL: 0,
-      resultadoTotal:0 
-   }
-];
+      totalCOL: 0
+   }];
 
-ngDoCheck(){
-  let suma = 0;
-  for (let index = 0; index < this.items.length; index++) {
-   suma = suma + this.items[index].resultadoTotal;
+  ngDoCheck(){
+    this.getGrandTotalQuantity();
+    this.getGrandTotalPriceUSD();
+    this.getGrandTotalPriceCOL();
   }
-  this.totalCalculo = suma;
-}
 
-getCalculation(cantidad:number, precio:number, index:number){ 
-    this.items[index].resultadoTotal = cantidad*precio;
-}
+  getGrandTotalQuantity(){
+    let suma = 0;
+    for (let index = 0; index < this.items.length; index++) {
+    suma = suma + this.items[index].quantity;
+    }
+    this.grandTotalQuantity = suma;
+  }
+
+  getGrandTotalPriceUSD(){  
+    let suma = 0;
+    for (let index = 0; index < this.items.length; index++) {
+    suma = suma + this.items[index].totalUSD;
+    }
+    this.grandTotalPriceUSD = suma;
+  }
+
+  getGrandTotalPriceCOL(){  
+    let suma = 0;
+    for (let index = 0; index < this.items.length; index++) {
+    suma = suma + this.items[index].totalCOL;
+    }
+    this.grandTotalPriceCOL = suma;
+  }
+
+  getCalculation(quantity:number, price:number, index:number){ 
+      this.items[index].totalUSD = quantity * price;
+      this.items[index].totalCOL = quantity * price * 3700;
+  }
 }
