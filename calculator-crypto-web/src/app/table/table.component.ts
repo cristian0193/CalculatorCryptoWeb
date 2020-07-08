@@ -1,11 +1,14 @@
-import { Component,DoCheck } from '@angular/core';
+import { Component,DoCheck,OnInit } from '@angular/core';
+import { TrmcolombiaService } from './trmcolombia.service';
+import { TRM } from './trm';
+
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements DoCheck{
+export class TableComponent implements DoCheck, OnInit{
 
   public precioDolar: number;
   public cantidad: number;
@@ -13,10 +16,14 @@ export class TableComponent implements DoCheck{
   public grandTotalQuantity:number;
   public grandTotalPriceUSD:number;
   public grandTotalPriceCOL:number;
+  public date:string;
+  public trm:TRM[];
+  public priceValue:string;
 
-  constructor(){
+  constructor(private trmcolombiaService: TrmcolombiaService){
     this.precioDolar = 0;
     this.cantidad= 0;
+    this.date = '2020-07-07';
   }
 
   public items: Array<any> = [
@@ -36,6 +43,16 @@ export class TableComponent implements DoCheck{
       totalUSD: 0,
       totalCOL: 0
    }];
+
+   ngOnInit(){
+    this.trmcolombiaService.getTRM(this.date).subscribe(
+      trm => this.trm = trm
+    );    
+  }
+  
+  getTrmColombia(){
+    this.priceValue = Object.values(this.trm)[4].toString();
+  }
 
   ngDoCheck(){
     this.getGrandTotalQuantity();

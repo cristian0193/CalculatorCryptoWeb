@@ -1,3 +1,4 @@
+<p>{{priceValue}}</p>
 <div class="table-responsive">
     <table id="table-coin" class="table table-hover">
         <thead class="thead-dark">
@@ -23,6 +24,7 @@
                 <td class="text-center">{{ item.totalCOL | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
                 <td class="text-center">
                     <button id="calcular" class="btn btn-primary" (click)="getCalculation(item.quantity, item.price, i)">Calcular</button>
+                    <button id="trm" class="btn btn-danger" (click)="getTrmColombia()">TRM</button>
                 </td>
             </tr>
 

@@ -7,6 +7,11 @@ import { NavigatorComponent } from './navigator/navigator.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { TableComponent } from './table/table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+
+import { CoinmarketcapService } from './table/coinmarketcap.service';
+import { TrmcolombiaService } from './table/trmcolombia.service';
+
 
 @NgModule({
   declarations: [
@@ -18,9 +23,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   imports: [
     BrowserModule,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [CoinmarketcapService,TrmcolombiaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
