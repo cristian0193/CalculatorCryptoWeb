@@ -1,7 +1,8 @@
 import { Component,DoCheck,OnInit } from '@angular/core';
-import { TrmcolombiaService } from './trmcolombia.service';
-import { TRM } from './trm';
-
+import { TrmcolombiaService } from './services/trmcolombia.service';
+import { CoinmarketcapService } from './services/coinmarketcap.service';
+import { TRM } from './models/trm';
+import { Coin } from './models/coin';
 
 @Component({
   selector: 'app-table',
@@ -16,43 +17,23 @@ export class TableComponent implements DoCheck, OnInit{
   public grandTotalQuantity:number;
   public grandTotalPriceUSD:number;
   public grandTotalPriceCOL:number;
+  public priceValue:string;
   public date:string;
   public trm:TRM[];
-  public priceValue:string;
+  public start:string;
+  public limit:string;
+  public coin:any[];
+  public itemsCoin:Coin[];
+ 
 
-  constructor(private trmcolombiaService: TrmcolombiaService){
+  constructor(private trmcolombiaService: TrmcolombiaService, private coinmarketcapService: CoinmarketcapService){
     this.precioDolar = 0;
     this.cantidad= 0;
-    this.date = '2020-07-09';
   }
 
-  public items: Array<any> = [
-    {
-       coin: 'Bitcoin',
-       price: 9000,
-       priceCol: 36000000,
-       quantity: 0,
-       totalUSD: 0,
-       totalCOL: 0
-    },
-    {
-      coin: 'Ether',
-      price: 250,
-      priceCol: 850000,
-      quantity: 0,
-      totalUSD: 0,
-      totalCOL: 0
-   }];
-
-   ngOnInit(){
-    this.trmcolombiaService.getTRM(this.date).subscribe(
-      trm => this.trm = trm
-    );  
-  }
-  
-  getTrmColombia(){
-    this.priceValue = Object.values(this.trm)[4].toString();
-    console.log(this.priceValue);
+  ngOnInit(){ 
+    this.getCallServiceCoin();
+    this.getCallServiceTrm();
   }
 
   ngDoCheck(){
@@ -61,33 +42,78 @@ export class TableComponent implements DoCheck, OnInit{
     this.getGrandTotalPriceCOL();
   }
 
+  getCallServiceCoin(){
+    this.start = "1";
+    this.limit = "10";
+    this.coinmarketcapService.getCoinPrice(this.start,this.limit).subscribe(
+      coin => this.coin = coin
+    ),
+      error => console.log(error),
+    () => console.log('Api CoinMarketCap Consumida');
+    console.log(this.coin);
+  }
+
+  getCallServiceTrm(){
+    this.date = this.getDate();
+    this.trmcolombiaService.getTRM(this.date).subscribe(
+      trm => this.trm = trm
+    ),
+      error => console.log(error),
+    () => console.log('Api TRM Consumida'); 
+    console.log(this.trm);
+  }
+
+  getTrmColombia(){
+    this.getCallServiceTrm();
+    this.priceValue = Object.values(this.trm)[4].toString();
+  }
+
+  getItemCoin(){
+    this.getCallServiceCoin();
+    this.itemsCoin = []
+    for (let index = 0; index < Object.values(this.coin)[1].length; index++) {
+      let objectCoin = new Coin();
+      objectCoin.coin = Object.values(this.coin)[1][index].name
+      objectCoin.symbol = Object.values(this.coin)[1][index].symbol
+      objectCoin.price = Object.values(this.coin)[1][index].quote.USD.price
+      this.itemsCoin.push(objectCoin);      
+    }
+    console.log(this.itemsCoin);
+    
+  }
+
   getGrandTotalQuantity(){
     let suma = 0;
-    for (let index = 0; index < this.items.length; index++) {
-    suma = suma + this.items[index].quantity;
+    for (let index = 0; index < this.itemsCoin.length; index++) {
+    suma = suma + this.itemsCoin[index].quantity;
     }
     this.grandTotalQuantity = suma;
   }
 
   getGrandTotalPriceUSD(){  
     let suma = 0;
-    for (let index = 0; index < this.items.length; index++) {
-    suma = suma + this.items[index].totalUSD;
+    for (let index = 0; index < this.itemsCoin.length; index++) {
+    suma = suma + this.itemsCoin[index].totalUSD;
     }
     this.grandTotalPriceUSD = suma;
   }
 
   getGrandTotalPriceCOL(){  
     let suma = 0;
-    for (let index = 0; index < this.items.length; index++) {
-    suma = suma + this.items[index].totalCOL;
+    for (let index = 0; index < this.itemsCoin.length; index++) {
+    suma = suma + this.itemsCoin[index].totalCOL;
     }
     this.grandTotalPriceCOL = suma;
   }
 
   getCalculation(quantity:number, price:number, index:number){ 
-      this.items[index].totalUSD = quantity * price;
-      this.items[index].totalCOL = quantity * price * 3700;
+      this.itemsCoin[index].totalUSD = quantity * price;
+      this.itemsCoin[index].totalCOL = quantity * price * 3700;
+  }
+
+  getDate(){
+    let date = new Date();
+    return date.toLocaleDateString('sv-SE', { timeZone: 'America/Bogota' }).toString();
   }
 
 }

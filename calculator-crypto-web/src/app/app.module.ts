@@ -9,8 +9,8 @@ import { TableComponent } from './table/table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
-import { CoinmarketcapService } from './table/coinmarketcap.service';
-import { TrmcolombiaService } from './table/trmcolombia.service';
+import { CoinmarketcapService } from './table/services/coinmarketcap.service';
+import { TrmcolombiaService } from './table/services/trmcolombia.service';
 
 
 @NgModule({

@@ -1,6 +1,16 @@
-declare module namespace {
+export class Coin {
+    coin: string;
+    symbol: string;
+    price: number;
+    priceCol: number = 0;
+    quantity: number = 0;
+    totalUSD: number = 0
+    totalCOL: number = 0;
+}
 
-    export interface Status {
+/*export namespace Coin {
+
+    export class Status {
         timestamp: Date;
         error_code: number;
         error_message?: any;
@@ -9,7 +19,7 @@ declare module namespace {
         notice?: any;
     }
 
-    export interface USD {
+    export class USD {
         price: number;
         volume_24h: number;
         percent_change_1h: number;
@@ -19,11 +29,11 @@ declare module namespace {
         last_updated: Date;
     }
 
-    export interface Quote {
+    export class Quote {
         USD: USD;
     }
 
-    export interface Datum {
+    export class Datum {
         id: number;
         name: string;
         symbol: string;
@@ -40,10 +50,11 @@ declare module namespace {
         quote: Quote;
     }
 
-    export interface RootObject {
+    export class RootObject {
         status: Status;
         data: Datum[];
     }
 
-}
+}*/
+
 
