@@ -22,7 +22,9 @@ export class TableComponent implements DoCheck, OnInit{
   public trm:TRM[];
   public start:string;
   public limit:string;
-  public coin:any[];
+  public id:number;
+  public coinPrice:any[];
+  public coinInfo:any[];
   public itemsCoin:Coin[];
  
 
@@ -32,8 +34,9 @@ export class TableComponent implements DoCheck, OnInit{
   }
 
   ngOnInit(){ 
-    this.getCallServiceCoin();
+    this.getCallServiceCoinPrice();
     this.getCallServiceTrm();
+    this.getCallServiceCoinInfo(1);
   }
 
   ngDoCheck(){
@@ -42,15 +45,22 @@ export class TableComponent implements DoCheck, OnInit{
     this.getGrandTotalPriceCOL();
   }
 
-  getCallServiceCoin(){
+  getCallServiceCoinPrice(){
     this.start = "1";
-    this.limit = "10";
+    this.limit = "25";
     this.coinmarketcapService.getCoinPrice(this.start,this.limit).subscribe(
-      coin => this.coin = coin
+      coin => this.coinPrice = coin
     ),
       error => console.log(error),
     () => console.log('Api CoinMarketCap Consumida');
-    console.log(this.coin);
+  }
+
+  getCallServiceCoinInfo(id:number){
+    this.coinmarketcapService.getCoinInfo(id).subscribe(
+      coininfo => this.coinInfo = coininfo
+    ),
+      error => console.log(error),
+    () => console.log('Api CoinMarketCap Consumida');
   }
 
   getCallServiceTrm(){
@@ -60,7 +70,6 @@ export class TableComponent implements DoCheck, OnInit{
     ),
       error => console.log(error),
     () => console.log('Api TRM Consumida'); 
-    console.log(this.trm);
   }
 
   getTrmColombia(){
@@ -69,41 +78,62 @@ export class TableComponent implements DoCheck, OnInit{
   }
 
   getItemCoin(){
-    this.getCallServiceCoin();
+    this.getCallServiceCoinPrice();
+    this.getCallServiceTrm();
     this.itemsCoin = []
-    for (let index = 0; index < Object.values(this.coin)[1].length; index++) {
+    let price = 0;
+    this.priceValue = Object.values(this.trm)[4].toString();
+    
+    for (let index = 0; index < Object.values(this.coinPrice)[1].length; index++) {
       let objectCoin = new Coin();
-      objectCoin.coin = Object.values(this.coin)[1][index].name
-      objectCoin.symbol = Object.values(this.coin)[1][index].symbol
-      objectCoin.price = Object.values(this.coin)[1][index].quote.USD.price
+      
+      let id = Object.values(this.coinPrice)[1][index].id
+      this.getCallServiceCoinInfo(id);
+
+      objectCoin.coin = Object.values(this.coinPrice)[1][index].name
+      objectCoin.symbol = Object.values(this.coinPrice)[1][index].symbol
+      price = Object.values(this.coinPrice)[1][index].quote.USD.price
+      objectCoin.price = price
+      objectCoin.priceCol = price * parseFloat(this.priceValue);
+      
+      if(Object.values(this.coinInfo)[1][id] != undefined){       
+        objectCoin.image = Object.values(this.coinInfo)[1][id].logo
+      }
+      
       this.itemsCoin.push(objectCoin);      
     }
-    console.log(this.itemsCoin);
     
   }
 
   getGrandTotalQuantity(){
     let suma = 0;
-    for (let index = 0; index < this.itemsCoin.length; index++) {
-    suma = suma + this.itemsCoin[index].quantity;
+    if(this.itemsCoin != null || this.itemsCoin != undefined){
+      for (let index = 0; index < this.itemsCoin.length; index++) {
+        suma = suma + this.itemsCoin[index].quantity;
+        }
+        this.grandTotalQuantity = suma;
+      }
     }
-    this.grandTotalQuantity = suma;
-  }
 
   getGrandTotalPriceUSD(){  
     let suma = 0;
-    for (let index = 0; index < this.itemsCoin.length; index++) {
-    suma = suma + this.itemsCoin[index].totalUSD;
-    }
-    this.grandTotalPriceUSD = suma;
+    if(this.itemsCoin != null || this.itemsCoin != undefined){
+      for (let index = 0; index < this.itemsCoin.length; index++) {
+        suma = suma + this.itemsCoin[index].totalUSD;
+        }
+        this.grandTotalPriceUSD = suma;
+    } 
+    
   }
 
   getGrandTotalPriceCOL(){  
     let suma = 0;
-    for (let index = 0; index < this.itemsCoin.length; index++) {
-    suma = suma + this.itemsCoin[index].totalCOL;
+    if(this.itemsCoin != null || this.itemsCoin != undefined){
+      for (let index = 0; index < this.itemsCoin.length; index++) {
+        suma = suma + this.itemsCoin[index].totalCOL;
+        }
+        this.grandTotalPriceCOL = suma;
     }
-    this.grandTotalPriceCOL = suma;
   }
 
   getCalculation(quantity:number, price:number, index:number){ 
