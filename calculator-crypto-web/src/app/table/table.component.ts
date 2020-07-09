@@ -23,7 +23,7 @@ export class TableComponent implements DoCheck, OnInit{
   constructor(private trmcolombiaService: TrmcolombiaService){
     this.precioDolar = 0;
     this.cantidad= 0;
-    this.date = '2020-07-07';
+    this.date = '2020-07-09';
   }
 
   public items: Array<any> = [
@@ -47,11 +47,12 @@ export class TableComponent implements DoCheck, OnInit{
    ngOnInit(){
     this.trmcolombiaService.getTRM(this.date).subscribe(
       trm => this.trm = trm
-    );    
+    );  
   }
   
   getTrmColombia(){
     this.priceValue = Object.values(this.trm)[4].toString();
+    console.log(this.priceValue);
   }
 
   ngDoCheck(){
