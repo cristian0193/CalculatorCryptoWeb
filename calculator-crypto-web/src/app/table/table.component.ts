@@ -2,7 +2,9 @@ import { Component,DoCheck,OnInit } from '@angular/core';
 import { TrmcolombiaService } from './services/trmcolombia.service';
 import { CoinmarketcapService } from './services/coinmarketcap.service';
 import { TRM } from './models/trm';
-import { Coin } from './models/coin';
+import { RootObject , Coin } from './models/coin';
+import { Info } from './models/coininfo';
+import { EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -19,24 +21,25 @@ export class TableComponent implements DoCheck, OnInit{
   public grandTotalPriceCOL:number;
   public priceValue:string;
   public date:string;
-  public trm:TRM[];
   public start:string;
   public limit:string;
   public id:number;
-  public coinPrice:any[];
-  public coinInfo:any[];
-  public itemsCoin:Coin[];
+  public trm:TRM;
+  public coinPrice:Array<RootObject> = [];
+  public coinInfo:Array<Info> = [];
+  public itemsCoin:Array<Coin> = [];
+  public info:Array<Info> = [];
  
 
   constructor(private trmcolombiaService: TrmcolombiaService, private coinmarketcapService: CoinmarketcapService){
     this.precioDolar = 0;
     this.cantidad= 0;
+    //this.getCallServiceCoinInfo(1);
   }
 
   ngOnInit(){ 
     this.getCallServiceCoinPrice();
     this.getCallServiceTrm();
-    this.getCallServiceCoinInfo(1);
   }
 
   ngDoCheck(){
@@ -48,24 +51,42 @@ export class TableComponent implements DoCheck, OnInit{
   getCallServiceCoinPrice(){
     this.start = "1";
     this.limit = "25";
-    this.coinmarketcapService.getCoinPrice(this.start,this.limit).subscribe(
-      coin => this.coinPrice = coin
+    this.coinmarketcapService.getCoinPrice<RootObject[]>(this.start,this.limit).subscribe(
+      resp =>this.coinPrice = resp
     ),
       error => console.log(error),
-    () => console.log('Api CoinMarketCap Consumida');
+    () => console.log('Api CoinMarketCap Consumida');   
   }
 
   getCallServiceCoinInfo(id:number){
-    this.coinmarketcapService.getCoinInfo(id).subscribe(
-      coininfo => this.coinInfo = coininfo
+    this.coinInfo = []
+    this.coinmarketcapService.getCoinInfo<Info[]>(id).subscribe(
+      response => {
+        let infCoin = new Info();
+        infCoin.id = id
+        infCoin.logo = Object.values(response)[1][id].logo
+        this.coinInfo.push(infCoin);
+
+        /*if(Object.values(response)[1][id] !== undefined){
+          for (let i = 0; i < this.coinInfo.length; i++) {
+            let idinfo = this.coinInfo[i].id;
+            let idinfologo = this.coinInfo[i].logo;
+
+            if(id === idinfo){
+              this.itemsCoin[i].image = idinfologo
+            }
+        }
+      }*/
+    }
     ),
       error => console.log(error),
     () => console.log('Api CoinMarketCap Consumida');
+  
   }
 
   getCallServiceTrm(){
     this.date = this.getDate();
-    this.trmcolombiaService.getTRM(this.date).subscribe(
+    this.trmcolombiaService.getTRM<TRM>(this.date).subscribe(
       trm => this.trm = trm
     ),
       error => console.log(error),
@@ -74,35 +95,39 @@ export class TableComponent implements DoCheck, OnInit{
 
   getTrmColombia(){
     this.getCallServiceTrm();
-    this.priceValue = Object.values(this.trm)[4].toString();
+      if(this.trm.Value !== undefined){
+        this.priceValue =  this.trm.Value;
+      }
   }
-
+    
   getItemCoin(){
     this.getCallServiceCoinPrice();
     this.getCallServiceTrm();
-    this.itemsCoin = []
     let price = 0;
-    this.priceValue = Object.values(this.trm)[4].toString();
+    this.itemsCoin = []
     
-    for (let index = 0; index < Object.values(this.coinPrice)[1].length; index++) {
+    if(this.trm.Value !== undefined){
+      this.priceValue =  this.trm.Value;
+    }
+     
+    for (let index = 0; index < this.coinPrice["data"].length; index++) {
       let objectCoin = new Coin();
-      
-      let id = Object.values(this.coinPrice)[1][index].id
-      this.getCallServiceCoinInfo(id);
-
-      objectCoin.coin = Object.values(this.coinPrice)[1][index].name
-      objectCoin.symbol = Object.values(this.coinPrice)[1][index].symbol
-      price = Object.values(this.coinPrice)[1][index].quote.USD.price
+      objectCoin.id = this.coinPrice["data"][index].id;
+      objectCoin.coin = this.coinPrice["data"][index].name;
+      objectCoin.symbol = this.coinPrice["data"][index].symbol
+      price = this.coinPrice["data"][index].quote.USD.price
       objectCoin.price = price
       objectCoin.priceCol = price * parseFloat(this.priceValue);
-      
-      if(Object.values(this.coinInfo)[1][id] != undefined){       
-        objectCoin.image = Object.values(this.coinInfo)[1][id].logo
-      }
-      
-      this.itemsCoin.push(objectCoin);      
+      this.itemsCoin.push(objectCoin); 
     }
-    
+    this.getImgLogo();
+  }
+
+  getImgLogo(){
+    for (let index = 0; index < this.itemsCoin.length; index++) {
+        const ids = this.itemsCoin[index].id
+        //this.getCallServiceCoinInfo(ids) 
+    }
   }
 
   getGrandTotalQuantity(){

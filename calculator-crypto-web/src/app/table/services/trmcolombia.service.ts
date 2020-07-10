@@ -13,7 +13,7 @@ export class TrmcolombiaService {
 
   constructor(private http: HttpClient) { }
 
-  getTRM(date): Observable<TRM[]> {
-    return this.http.get<TRM[]>(`${this.urlEndPoint}?dateFilter=${date}`, {headers: this.httpHeaders})
+  getTRM<T>(date): Observable<T> {
+    return this.http.get<T>(`${this.urlEndPoint}?dateFilter=${date}`, {headers: this.httpHeaders})
   }
 }

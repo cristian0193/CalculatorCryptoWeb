@@ -17,7 +17,7 @@
         <tbody>
             <tr *ngFor="let item of itemsCoin; let i = index">
                 <th scope="row">
-                    <img class="imag-little" src="{{item.image}}" alt=""> {{ item.coin | uppercase }} ({{ item.symbol | uppercase }})
+                    <!--img class="imag-little" src="{{item.image}}"--> {{ item.coin | uppercase }} ({{ item.symbol | uppercase }})
                 </th>
                 <td class="text-center">{{ item.price | currency : 'USD' }}</td>
                 <td class="text-center">{{ item.priceCol | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
