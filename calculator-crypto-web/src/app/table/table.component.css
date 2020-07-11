@@ -30,3 +30,7 @@ input[type=number]::-webkit-inner-spin-button {
     width: 20px;
     height: 20px;
 }
+
+.row-center {
+    vertical-align: middle;
+}

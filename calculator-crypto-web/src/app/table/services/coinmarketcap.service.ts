@@ -9,17 +9,18 @@ export class CoinmarketcapService {
 
   private urlEndPointCoinPrice:string = 'https://hgookgjuqg.execute-api.us-east-1.amazonaws.com/develop/coinmarketcap'
   private urlEndPointCoinInfo:string = 'https://hgookgjuqg.execute-api.us-east-1.amazonaws.com/develop/coinmarketcapinfo'
-  //private urlEndPointCoinPrice:string = 'http://localhost:3001/develop/coinmarketcap'
-  //private urlEndPointCoinInfo:string = 'http://localhost:3001/develop/coininfologo'
+  //private urlEndPointCoinPrice:string = 'http://localhost:3002/develop/coinmarketcap'
+  //private urlEndPointCoinInfo:string = 'http://localhost:3002/develop/coininfologo'
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'})
 
   constructor(private http: HttpClient) {}
   
-  getCoinPrice<T>(start:string,limit:string): Observable<T> {
+  public getCoinPrice<T>(start:number,limit:number): Observable<T> {
     return this.http.get<T>(`${this.urlEndPointCoinPrice}?start=${start}&limit=${limit}`, {headers: this.httpHeaders})
   }
 
-  getCoinInfo<T>(id:number): Observable<T>  {
+  public getCoinInfo<T>(id:number[]): Observable<T>  {
     return this.http.get<T>(`${this.urlEndPointCoinInfo}?id=${id}`, {headers: this.httpHeaders})
   }
+
 }
