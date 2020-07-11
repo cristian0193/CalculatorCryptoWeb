@@ -4,7 +4,6 @@ import { CoinmarketcapService } from './services/coinmarketcap.service';
 import { TRM } from './models/trm';
 import { RootObject , Coin } from './models/coin';
 import { Info } from './models/coininfo';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -120,28 +119,6 @@ export class TableComponent implements DoCheck, OnInit, OnChanges{
     
   getItemCoin(){
     this.getCallServiceCoinPrice(1, this.valueSelected);
-  /*  this.getCallServiceTrm();
-    let price = 0;
-    this.itemsCoin = []
-    let arrayNumber = []
-     
-    for (let index = 0; index < this.coinPrice["data"].length; index++) {
-      let objectCoin = new Coin();
-      objectCoin.id = this.coinPrice["data"][index].id;
-      objectCoin.coin = this.coinPrice["data"][index].name;
-      objectCoin.symbol = this.coinPrice["data"][index].symbol
-      price = this.coinPrice["data"][index].quote.USD.price
-      objectCoin.price = price
-      objectCoin.priceCol = price * parseFloat(this.priceValue);
-      this.itemsCoin.push(objectCoin); 
-    }
-
-    for (let index = 0; index < this.itemsCoin.length; index++) {
-        let ids = this.itemsCoin[index].id
-        arrayNumber.push(ids)
-    }
-    
-    this.getCallServiceCoinInfo(arrayNumber) */
   }
 
   getGrandTotalQuantity(){
@@ -152,7 +129,7 @@ export class TableComponent implements DoCheck, OnInit, OnChanges{
         }
         this.grandTotalQuantity = suma;
       }
-    }
+  }
 
   getGrandTotalPriceUSD(){  
     let suma = 0;
