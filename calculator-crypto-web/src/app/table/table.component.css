@@ -34,3 +34,12 @@ input[type=number]::-webkit-inner-spin-button {
 .row-center {
     vertical-align: middle;
 }
+
+.example-container {
+    height: 400px;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+}

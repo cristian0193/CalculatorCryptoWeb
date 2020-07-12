@@ -1,4 +1,4 @@
-import { Component,DoCheck,OnInit,OnChanges } from '@angular/core';
+import { Component,DoCheck,OnInit } from '@angular/core';
 import { TrmcolombiaService } from './services/trmcolombia.service';
 import { CoinmarketcapService } from './services/coinmarketcap.service';
 import { TRM } from './models/trm';
@@ -10,7 +10,8 @@ import { Info } from './models/coininfo';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements DoCheck, OnInit, OnChanges{
+
+export class TableComponent implements DoCheck, OnInit{
 
   public precioDolar: number;
   public cantidad: number;
@@ -40,9 +41,6 @@ export class TableComponent implements DoCheck, OnInit, OnChanges{
   ngOnInit(){ 
     this.getCallServiceCoinPrice(1,10);
     this.getCallServiceTrm();
-  }
-
-  ngOnChanges(){
   }
 
   ngDoCheck(){

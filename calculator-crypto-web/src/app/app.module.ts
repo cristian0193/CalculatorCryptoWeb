@@ -12,7 +12,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { CoinmarketcapService } from './table/services/coinmarketcap.service';
 import { TrmcolombiaService } from './table/services/trmcolombia.service';
 
-
 @NgModule({
   declarations: [
     AppComponent,
