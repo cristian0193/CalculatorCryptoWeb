@@ -1,12 +1,25 @@
 <br>
-<h1> TRM Colombia <span class="badge badge-secondary">{{priceValue}}</span></h1>
-<div class="input-group mb-3 col-2">
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg text-center">
+            <h1> TRM Colombia Actual <span class="badge badge-secondary">{{priceValue}}</span></h1>
+        </div>
+    </div>
+</div>
+
+<div class="input-group mb-3 col-2 border-padding">
     <select class="custom-select" id="inputGroupSelect" [(ngModel)]="valueSelected" (change)="getItemCoin()">
-      
+      <option selected="true" disabled="disable">Seleccionar</option>
       <option *ngFor="let valor of valueFilter;" [value]="valor">{{valor}}</option>
     </select>
 </div>
-<div class="table-responsive">
+
+<div *ngIf="valueSelected != 10 && valueSelected != 20 && valueSelected != 30 && valueSelected != 40" class="alert alert-info">
+    Seleccione un rango de consulta!
+</div>
+
+<div class="table-responsive div-table" *ngIf="valueSelected">
     <table id="table-coin" class="table table-striped border border-dark">
         <thead class="thead-dark">
             <tr>
@@ -24,13 +37,13 @@
                 <th scope="row" class="row-center">
                     <img class="imag-little" [src]="item.image"> {{ item.coin | uppercase }} ({{ item.symbol | uppercase }})
                 </th>
-                <td class="text-center row-center">{{ item.price | currency : 'USD' }}</td>
-                <td class="text-center row-center">{{ item.priceCol | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                <td class="text-center row-center text-blob">{{ item.price | currency : 'USD' }}</td>
+                <td class="text-center row-center text-blob">{{ item.priceCol | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
                 <td class="text-center row-center">
                     <input id="quantity" [(ngModel)]="item.quantity" type="number" class="text-center" style="width: 100px;" min="0" pattern="^[0-9]+">
                 </td>
-                <td class="text-center row-center">{{ item.totalUSD | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
-                <td class="text-center row-center">{{ item.totalCOL | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                <td class="text-center row-center text-blob">{{ item.totalUSD | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                <td class="text-center row-center text-blob">{{ item.totalCOL | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
                 <td class="text-center row-center">
                     <button id="calcular" class="btn btn-primary" (click)="getCalculation(item.quantity, item.price, i)">Calcular</button>
                 </td>

@@ -1,0 +1,91 @@
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h1> TRM Colombia Manual <input id="quantity" type="number" [(ngModel)]="manualtrm" class="text-center" style="width: 100px;" min="0" pattern="^[0-9]+"></h1>
+        </div>
+        <div class="col-sm">
+            <h1> TRM Colombia Actual <span class="badge badge-secondary">{{priceValue}}</span></h1>
+        </div>
+    </div>
+</div>
+
+<div class="input-group mb-3 col-2 border-padding">
+    <select class="custom-select" id="inputGroupSelect" [(ngModel)]="valueSelected" (change)="getItemCoin()">
+      <option selected="true" disabled="disable" >Seleccionar</option>
+      <option *ngFor="let valor of valueFilter;" [value]="valor">{{valor}}</option>
+    </select>
+</div>
+
+<div *ngIf="valueSelected != 10 && valueSelected != 20 && valueSelected != 30 && valueSelected != 40" class="alert alert-info">
+    Seleccione un rango de consulta!
+</div>
+
+<div class="table-responsive div-table" *ngIf="valueSelected">
+    <table id="table-coin" class="table table-striped border border-dark">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">CryptoCoin</th>
+                <th scope="col" class="text-center">Price (USD)</th>
+                <th scope="col" class="text-center">Price (COL)</th>
+                <th scope="col" class="text-center">Quantity</th>
+                <th scope="col" class="text-center">Total (USD)</th>
+                <th scope="col" class="text-center">Total (COL)</th>
+                <th scope="col" class="text-center">Total (COL) TRM</th>
+                <th scope="col" class="text-center">Different TRM</th>
+                <th scope="col" class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of itemsCoin; let i = index">
+                <th scope="row" class="row-center">
+                    <img class="imag-little" [src]="item.image"> {{ item.coin | uppercase }} ({{ item.symbol | uppercase }})
+                </th>
+                <td class="text-center row-center">
+                    <input id="price" [(ngModel)]="item.price" type="number" class="text-center" style="width: 100px;" min="0" pattern="^[0-9]+">
+                </td>
+                <td class="text-center row-center text-blob">{{ item.priceCol | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                <td class="text-center row-center">
+                    <input id="quantity" [(ngModel)]="item.quantity" type="number" class="text-center" style="width: 100px;" min="0" pattern="^[0-9]+">
+                </td>
+                <td class="text-center row-center text-blob">{{ item.totalUSD | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                <td class="text-center row-center text-blob">{{ item.totalCOL | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                <td class="text-center row-center text-blob">{{ item.totalCOLTMR | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                <td class="{{colorText}}">{{ item.differentTMR | currency : 'USD' : 'symbol' : '1.0-0'}}</td>
+                <td class="text-center row-center">
+                    <button id="calcular" class="btn btn-primary" (click)="getCalculation(item.quantity, item.price, i)">Calcular</button>
+                </td>
+            </tr>
+
+            <tr class="table-primary">
+                <th colspan="3" scope="row">Grand Total</th>
+                <td class="text-center text-blob">
+                    <span class="label span-info">
+                        {{ grandTotalQuantity }}
+                    </span>
+                </td>
+                <td class="text-center text-blob">
+                    <span class="label span-danger">
+                        {{ grandTotalPriceUSD | currency : 'USD' : 'symbol' : '1.0-0'}}
+                    </span>
+                </td>
+                <td class="text-center text-blob">
+                    <span class="label span-danger">
+                        {{ grandTotalPriceCOL | currency : 'USD' : 'symbol' : '1.0-0'}}
+                    </span>
+                </td>
+                <td class="text-center text-blob">
+                    <span class="label span-danger">
+                        {{ grandTotalPriceCOLTRM | currency : 'USD' : 'symbol' : '1.0-0'}}
+                    </span>
+                </td>
+                <td class="text-center text-blob">
+                    <span class="label span-danger">
+                        {{ grandTotalDifferentTRM | currency : 'USD' : 'symbol' : '1.0-0'}}
+                    </span>
+                </td>
+                <td class="text-center" style="font-weight: bold;"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

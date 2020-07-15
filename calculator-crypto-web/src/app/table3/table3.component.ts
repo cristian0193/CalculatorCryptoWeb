@@ -1,17 +1,17 @@
 import { Component,DoCheck,OnInit } from '@angular/core';
-import { TrmcolombiaService } from './services/trmcolombia.service';
-import { CoinmarketcapService } from './services/coinmarketcap.service';
+import { Trmcolombia3Service } from './services/trmcolombia3.service';
+import { Coinmarketcap3Service } from './services/coinmarketcap3.service';
 import { TRM } from './models/trm';
 import { RootObject , Coin } from './models/coin';
 import { Info } from './models/coininfo';
 
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  selector: 'app-table3',
+  templateUrl: './table3.component.html',
+  styleUrls: ['./table3.component.css']
 })
 
-export class TableComponent implements DoCheck, OnInit{
+export class Table3Component implements DoCheck, OnInit{
 
   public precioDolar: number;
   public cantidad: number;
@@ -19,6 +19,8 @@ export class TableComponent implements DoCheck, OnInit{
   public grandTotalQuantity:number;
   public grandTotalPriceUSD:number;
   public grandTotalPriceCOL:number;
+  public grandTotalPriceCOLTRM:number;
+  public grandTotalDifferentTRM:number;
   public priceValue:string;
   public date:string;
   public start:string;
@@ -30,12 +32,15 @@ export class TableComponent implements DoCheck, OnInit{
   public itemsCoin:Array<Coin> = [];
   public info:Array<Info> = [];
   public coininfoArray:Array<Info> = [];
-  public valueFilter:number[] = [10,20,30]
+  public valueFilter:number[] = [10,20,30,40]
   public valueSelected:number;
+  public manualtrm:number;
+  public colorText:string;
 
-  constructor(private trmcolombiaService: TrmcolombiaService, private coinmarketcapService: CoinmarketcapService){
+  constructor(private trmcolombiaService: Trmcolombia3Service, private coinmarketcapService: Coinmarketcap3Service){
     this.precioDolar = 0;
-    this.cantidad= 0;
+    this.manualtrm = 0;
+    this.colorText = "text-center row-center text-blob";
   }
 
   ngOnInit(){ 
@@ -47,15 +52,17 @@ export class TableComponent implements DoCheck, OnInit{
     this.getGrandTotalQuantity();
     this.getGrandTotalPriceUSD();
     this.getGrandTotalPriceCOL();
+    this.getGrandTotalPriceCOLTRM();
+    this.getGrandTotalDifferentTRM();
+    
   }
-
+  
   getCallServiceCoinPrice(start:number,limit:number){
    
     this.coinmarketcapService.getCoinPrice<RootObject[]>(start,limit).subscribe(
       resp => { 
 
         this.getCallServiceTrm();
-        let price = 0;
         this.itemsCoin = []
         let arrayNumber = []
      
@@ -64,9 +71,6 @@ export class TableComponent implements DoCheck, OnInit{
           objectCoin.id = resp['data'][index].id;
           objectCoin.coin = resp['data'][index].name;
           objectCoin.symbol = resp['data'][index].symbol
-          price = resp['data'][index].quote.USD.price
-          objectCoin.price = price
-          objectCoin.priceCol = price * parseFloat(this.priceValue);
           this.itemsCoin.push(objectCoin); 
         }
 
@@ -137,7 +141,6 @@ export class TableComponent implements DoCheck, OnInit{
         }
         this.grandTotalPriceUSD = suma;
     } 
-    
   }
 
   getGrandTotalPriceCOL(){  
@@ -150,9 +153,41 @@ export class TableComponent implements DoCheck, OnInit{
     }
   }
 
+  getGrandTotalPriceCOLTRM(){  
+    let suma = 0;
+    if(this.itemsCoin != null || this.itemsCoin != undefined){
+      for (let index = 0; index < this.itemsCoin.length; index++) {
+        suma = suma + this.itemsCoin[index].totalCOLTMR;
+        }
+        this.grandTotalPriceCOLTRM = suma;
+    }
+  }
+
+  getGrandTotalDifferentTRM(){  
+    let suma = 0;
+    if(this.itemsCoin != null || this.itemsCoin != undefined){
+      for (let index = 0; index < this.itemsCoin.length; index++) {
+        suma = suma + this.itemsCoin[index].differentTMR;
+        }
+        this.grandTotalDifferentTRM = suma;
+    }
+  }
+
   getCalculation(quantity:number, price:number, index:number){ 
-      this.itemsCoin[index].totalUSD = quantity * price;
-      this.itemsCoin[index].totalCOL = quantity * price * 3700;
+      this.getCallServiceTrm();
+      this.itemsCoin[index].priceCol = (price * this.manualtrm);
+      this.itemsCoin[index].totalUSD = (quantity * price);
+      this.itemsCoin[index].totalCOL = (quantity * price * this.manualtrm);
+      this.itemsCoin[index].totalCOLTMR = (quantity * price * parseFloat(this.priceValue));
+      this.itemsCoin[index].differentTMR = (quantity * price * parseFloat(this.priceValue)) - (quantity * price * this.manualtrm);
+
+      if(this.itemsCoin[index].differentTMR === 0){
+        this.colorText = "text-center row-center text-blob";
+      }else if(this.itemsCoin[index].differentTMR > 0){
+        this.colorText = "text-center row-center text-blob green-positivo";
+      }else{
+        this.colorText = "text-center row-center text-blob red-negativo";
+      }
   }
 
   getDate(){

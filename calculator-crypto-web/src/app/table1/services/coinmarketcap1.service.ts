@@ -5,12 +5,10 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CoinmarketcapService {
+export class Coinmarketcap1Service {
 
   private urlEndPointCoinPrice:string = 'https://hgookgjuqg.execute-api.us-east-1.amazonaws.com/develop/coinmarketcap'
   private urlEndPointCoinInfo:string = 'https://hgookgjuqg.execute-api.us-east-1.amazonaws.com/develop/coinmarketcapinfo'
-  //private urlEndPointCoinPrice:string = 'http://localhost:3002/develop/coinmarketcap'
-  //private urlEndPointCoinInfo:string = 'http://localhost:3002/develop/coininfologo'
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'})
 
   constructor(private http: HttpClient) {}

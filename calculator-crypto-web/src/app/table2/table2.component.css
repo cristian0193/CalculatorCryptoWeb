@@ -1,0 +1,85 @@
+.label {
+    font-size: 95%;
+    padding: 4px 7px;
+    font-weight: 700;
+    margin-bottom: 0;
+    border-radius: .25em;
+    white-space: nowrap;
+}
+
+.span-info {
+    color: #fff;
+    background-color: #0d47a1;
+}
+
+.span-danger {
+    color: #fff;
+    background-color: #f4511e;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.text-blob {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.imag-little {
+    width: 20px;
+    height: 20px;
+}
+
+.row-center {
+    vertical-align: middle;
+}
+
+.green-positivo {
+    color: darkgreen;
+}
+
+.red-negativo {
+    color: #f4511e;
+}
+
+.border-padding {
+    padding-left: 0px;
+}
+
+.div-table {
+    max-width: 100%;
+    max-height: 50em;
+    overflow: scroll;
+    position: relative;
+}
+
+table {
+    position: relative;
+    border-collapse: collapse;
+}
+
+td,
+th {
+    padding: 0.50em;
+}
+
+thead th {
+    position: -webkit-sticky;
+    /* for Safari */
+    position: sticky;
+    top: 0;
+}
+
+thead th:first-child {
+    left: 0;
+    z-index: 1;
+}
+
+tbody th {
+    position: -webkit-sticky;
+    /* for Safari */
+    position: sticky;
+    left: 0;
+    border-right: 1px solid #CCC;
+}
