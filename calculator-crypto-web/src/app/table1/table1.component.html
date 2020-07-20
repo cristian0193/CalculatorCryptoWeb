@@ -10,7 +10,7 @@
 
 <div class="input-group mb-3 col-2 border-padding">
     <select class="custom-select" id="inputGroupSelect" [(ngModel)]="valueSelected" (change)="getItemCoin()">
-      <option selected="true" disabled="disable">Seleccionar</option>
+      <option selected="true" disabled="disable" >Seleccionar</option>
       <option *ngFor="let valor of valueFilter;" [value]="valor">{{valor}}</option>
     </select>
 </div>
